@@ -12,10 +12,11 @@ app.use(express.json())
 
 const user = process.env.DB_USER;
 const pass = process.env.DB_PASS
-const dbName=process.env.DB_NAME;
 
 
-const uri = `mongodb+srv://${user}:${pass}@cluster1.jkfjkqt.mongodb.net/?${dbName}=Cluster1`;
+
+const uri = `mongodb+srv://${user}:${pass}@cluster1.jkfjkqt.mongodb.net/?appName=Cluster1`;
+
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -31,7 +32,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
 
-        await client.connect();
+        // await client.connect();
         const db = client.db("appMelaDB")
         const appCollection = db.collection("apps");
 
@@ -68,15 +69,15 @@ async function run() {
         });
 
         // app id
-        app.get('/apps/:id',async(req,res)=>{
+        app.get('/apps/:id', async (req, res) => {
             const id = req.params.id;
-            const query={_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await appCollection.findOne(query)
             res.send(result)
         })
 
 
-       
+
 
     }
     finally {
@@ -85,10 +86,10 @@ async function run() {
 }
 run().catch(console.dir)
 
-// app.get('/', (req, res) => {
-//     res.send("Hello This is my app mela server")
-// })
+app.get('/', (req, res) => {
+    res.send("Hello This is my app mela server")
+})
 
-// app.listen(port, () => {
-//     console.log(`App Mela Server Port:${port}`)
-// })
+app.listen(port, () => {
+    console.log(`App Mela Server Port:${port}`)
+})
