@@ -76,11 +76,7 @@ async function run() {
         })
 
 
-        app.listen(port, () => {
-            console.log(`App Mela Server Port:${port}`)
-            console.log(`Top rating route: http://localhost:${port}/top-rating`);
-        })
-
+       
 
     }
     finally {
