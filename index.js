@@ -25,12 +25,19 @@ const client = new MongoClient(uri, {
 });
 
 
+let db;
+
+
 async function run() {
     try {
 
         await client.connect();
         const db = client.db("appMelaDB")
         const appCollection = db.collection("apps");
+
+        app.get('/', (req, res) => {
+            res.send("Hello This is my app mela server")
+        })
 
         // api sent
         app.post('/apps', async (req, res) => {
@@ -41,17 +48,30 @@ async function run() {
 
         // api get
         app.get('/apps', async (req, res) => {
-            const result = await appCollection.find().toArray()
+            const result = await appCollection.find().toArray();
             res.send(result)
         })
 
         // top apps
-        app.get('/apps/top', async (req, res) => {
-            const result = await appCollection.find().sort({ downloads: -1 }).limit(6).toArray()
-            res.send(result)
+        app.get('/top-rating', async (req, res) => {
+            try {
+                const result = await appCollection
+                    .find({})
+                    .sort({ ratingAvg: -1 })
+                    .limit(6)
+                    .toArray();
+                res.json(result);
+            } catch (error) {
+                console.error("Error fetching top apps:", error);
+                res.status(500).json({ error: "Failed to fetch top apps" });
+            }
+        });
+
+
+        app.listen(port, () => {
+            console.log(`App Mela Server Port:${port}`)
+            console.log(`Top rating route: http://localhost:${port}/top-rating`);
         })
-
-
 
 
     }
@@ -61,10 +81,10 @@ async function run() {
 }
 run().catch(console.dir)
 
-app.get('/', (req, res) => {
-    res.send("Hello This is my app mela server")
-})
+// app.get('/', (req, res) => {
+//     res.send("Hello This is my app mela server")
+// })
 
-app.listen(port, () => {
-    console.log(`App Mela Server Port:${port}`)
-})
+// app.listen(port, () => {
+//     console.log(`App Mela Server Port:${port}`)
+// })
