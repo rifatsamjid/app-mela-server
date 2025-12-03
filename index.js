@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 4000
@@ -66,6 +66,14 @@ async function run() {
                 res.status(500).json({ error: "Failed to fetch top apps" });
             }
         });
+
+        // app id
+        app.get('/apps/:id',async(req,res)=>{
+            const id = req.params.id;
+            const query={_id: new ObjectId(id)}
+            const result = await appCollection.findOne(query)
+            res.send(result)
+        })
 
 
         app.listen(port, () => {
