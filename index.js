@@ -17,23 +17,40 @@ const pass = process.env.DB_PASS
 const uri = `mongodb+srv://${user}:${pass}@cluster1.jkfjkqt.mongodb.net/?appName=Cluster1`;
 
 const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
 });
 
 
 async function run() {
-    try{
+    try {
+
         await client.connect();
-        await client.db("admin").command({ping: 1})
-            console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        const db = client.db("appMelaDB")
+        const appCollection = db.collection("apps");
+
+        // api sent
+        app.post('/apps', async (req, res) => {
+            const data = req.body
+            const result = await appCollection.insertOne(data)
+            res.send(result)
+        })
+
+        // api get
+        app.get('/apps', async (req, res) => {
+            const result = await appCollection.find().toArray()
+            res.send(result)
+        })
+
+
+
 
     }
-    finally{
-        
+    finally {
+
     }
 }
 run().catch(console.dir)
