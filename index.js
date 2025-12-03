@@ -12,9 +12,10 @@ app.use(express.json())
 
 const user = process.env.DB_USER;
 const pass = process.env.DB_PASS
+const dbName=process.env.DB_NAME;
 
 
-const uri = `mongodb+srv://${user}:${pass}@cluster1.jkfjkqt.mongodb.net/?appName=Cluster1`;
+const uri = `mongodb+srv://${user}:${pass}@cluster1.jkfjkqt.mongodb.net/?${dbName}=Cluster1`;
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -25,7 +26,6 @@ const client = new MongoClient(uri, {
 });
 
 
-let db;
 
 
 async function run() {
