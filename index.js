@@ -45,6 +45,12 @@ async function run() {
             res.send(result)
         })
 
+        // top apps
+        app.get('/apps/top', async (req, res) => {
+            const result = await appCollection.find().sort({ downloads: -1 }).limit(6).toArray()
+            res.send(result)
+        })
+
 
 
 
