@@ -32,7 +32,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
 
-        // await client.connect();
+        await client.connect();
         const db = client.db("appMelaDB")
         const appCollection = db.collection("apps");
 
@@ -86,9 +86,7 @@ async function run() {
 }
 run().catch(console.dir)
 
-app.get('/', (req, res) => {
-    res.send("Hello This is my app mela server")
-})
+
 
 app.listen(port, () => {
     console.log(`App Mela Server Port:${port}`)
